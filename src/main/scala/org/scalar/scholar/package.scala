@@ -5,7 +5,7 @@ package org.scalar
  * as well as their citations, from Google Scholar.
  *
  * It is inspired by the org.scalar.scholar package available on CRAN.
- * https://cran.r-project.org/web/packages/org.scalar.scholar
+ * https://cran.r-project.org/web/packages/scholar
  *
  * On Google Scholar, paper authors have a "Profile", which is associated
  * to each of their publications. Google regularly browses the Web looking for
@@ -17,12 +17,12 @@ package org.scalar
  * This library is used by creating a [[scholar.Profile]] based on the author's id
  * and invoking its methods.
  *
- * The id of an author may be known by looking at the end of the url attached to the author's GS webpage.
+ * An author's id may be known by looking at the end of the url attached to the author's GS webpage.
  *
  * {{{
  *    // Sir Newton is on Google Scholar
  *    val myProfile = Profile("j2MGGBAAAAAJ")
- *    val h = myProfile.hindex()
+ *    val h = myProfile.h()
  * }}}
  */
 package object scholar
