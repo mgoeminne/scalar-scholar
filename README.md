@@ -1,2 +1,2 @@
-# scalar-scholar
-A library for extracting citation data from Google Schoolar
+# Scholar
+A library for extracting citation data from Google Scholar
