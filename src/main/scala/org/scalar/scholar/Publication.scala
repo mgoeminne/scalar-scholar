@@ -1,7 +1,6 @@
 package org.scalar.scholar
 
 import java.net.URL
-import java.time.Year
 
 /**
  * A research publication
@@ -25,7 +24,7 @@ case class Publication(title: String,
    def pub_abstract(): Option[String] = ???
    def date: Option[String] = ???
 
-   def history: Map[Year, Int] = ???
+   def history: Map[Int, Int] = ???
    def gs_url: URL = ???
    def preprint: Option[URL] = ???
    def reference: Reference = ???
