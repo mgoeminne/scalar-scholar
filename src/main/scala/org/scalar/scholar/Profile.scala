@@ -30,17 +30,17 @@ case class Profile(id: String)
 
    /**
     *
-    * @return The name of the author associated to the profile
+    * The name of the author associated to the profile
     */
    lazy val name: String = content.select("div#gsc_prf_in").first().text
 
    /**
-    * @return The h index associated to the profile.
-    *         This is a measure of the productivity and the "popularity" of an author,
-    *         in term of citations.
+    * The h index associated to the profile.
+    * This is a measure of the productivity and the "popularity" of an author,
+    * in term of citations.
     *
-    *         Its value is the greatest value ''n'' so that the author
-    *         has ''n'' publications cited at least ''n'' times.
+    *  Its value is the greatest value ''n'' so that the author
+    *  has ''n'' publications cited at least ''n'' times.
     */
    lazy val h: Int = {
       import scala.collection.JavaConversions._
@@ -48,10 +48,10 @@ case class Profile(id: String)
    }
 
    /**
-    * @return The recent h index associated to the profile.
-    *         It corresponds to the h index of the profile, considering
-    *         only the citations of the last 5 years. This value may therefore decrease
-    *         over time.
+    * The recent h index associated to the profile.
+    * It corresponds to the h index of the profile, considering
+    * only the citations of the last 5 years. This value may therefore decrease
+    * over time.
     */
    lazy val recent_h: Int = {
       import scala.collection.JavaConversions._
@@ -59,9 +59,9 @@ case class Profile(id: String)
    }
 
    /**
-    * @return The number of times the author has been cited.
-    *         It should correspond to the sum of the citations of
-    *         all the author's publications.
+    * The number of times the author has been cited.
+    * It should correspond to the sum of the citations of
+    * all the author's publications.
     */
    lazy val citations: Int = {
       import scala.collection.JavaConversions._
@@ -69,8 +69,8 @@ case class Profile(id: String)
    }
 
    /**
-    * @return the recent number of citations for the author.
-    *         It corresponds to the number of citations in the last 5 years.
+    * the recent number of citations for the author.
+    * It corresponds to the number of citations in the last 5 years.
     */
    lazy val recent_citations: Int = {
       import scala.collection.JavaConversions._
@@ -78,7 +78,7 @@ case class Profile(id: String)
    }
 
    /**
-    * @return The number of publications that have at least 10 citations.
+    * The number of publications that have at least 10 citations.
     */
    lazy val i10: Int = {
       import scala.collection.JavaConversions._
@@ -86,7 +86,7 @@ case class Profile(id: String)
    }
 
    /**
-    * @return The recent number of publications that have at least 10 citations in the last 5 years.
+    * The recent number of publications that have at least 10 citations in the last 5 years.
     */
    lazy val recent_i10: Int = {
       import scala.collection.JavaConversions._
@@ -94,17 +94,22 @@ case class Profile(id: String)
    }
 
    /**
-    * @return The current position of the author. May be empty.
+    * The current position of the author. May be empty.
     */
    lazy val position: String = content.select("div.gsc_prf_il").first().text
 
    /**
-    * @return The verified author's email address, if any.
+    * The verified author's email address, if any.
     */
    lazy val email: Option[String] = content.select("div#gsc_prf_ivh").first().text match {
       case "No verified email" => None
       case s: String => Some(s)
    }
+
+   /**
+    * The number of citations, detailed by year.
+    */
+   lazy val history: Map[Int, Int] = ???
 
    /**
     * @return All the publications associated to the profile.
