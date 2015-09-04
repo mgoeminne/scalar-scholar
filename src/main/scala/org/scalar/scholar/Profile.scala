@@ -1,6 +1,11 @@
 package org.scalar.scholar
 
+import java.io.File
+
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+
+import scala.io.Source
 
 /**
  * A Scholar profile, corresponding to an author. This profile may be associated
@@ -11,7 +16,7 @@ import org.jsoup.Jsoup
  * All methods of this class require at least one HTTP query to Google Scholar.
  * Please take measures for limiting the number of queries sent in a short period.
  */
-case class Profile(id: String)
+class Profile private (val content: Document)
 {
    private val CITATION_INDEX = 0
    private val RECENT_CITATION_INDEX = 1
@@ -20,13 +25,6 @@ case class Profile(id: String)
    private val I10_INDEX = 4
    private val RECENT_I10_INDEX = 5
 
-
-   /**
-    * A XML representation of the page associated to the profile.
-    * Thanks to this variable, most properties can be retrieved without
-    * any additional access to the Google
-    */
-   private lazy val content = Jsoup.connect("https://scholar.google.com/citations?hl=en&user=" + id).get
 
    /**
     *
@@ -115,4 +113,21 @@ case class Profile(id: String)
     * @return All the publications associated to the profile.
     */
    def publications(): Stream[Publication] = ???
+}
+
+object Profile
+{
+   /**
+    * Creates a [[Profile]], based on an id representing the author.
+    * @param id the author's id
+    * @return the Profile associated to the id
+    */
+   def apply(id: String) = new Profile(Jsoup.connect("https://scholar.google.com/citations?hl=en&user=" + id).get)
+
+   /**
+    * Creates a [[Profile]], based on a file containing the webpage associated to the author.
+    * @param resource a IO object containing the webpage associated to the author
+    * @return the Profile associated to the id
+    */
+   def apply(resource: Source) = new Profile(Jsoup.parse(resource.getLines().mkString))
 }

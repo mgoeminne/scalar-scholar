@@ -4,8 +4,10 @@ import org.scalar.scholar.Profile
 import org.scalatest.Matchers._
 import org.scalatest._
 
+import scala.io.Source
+
 class ProfileTest extends FlatSpec with Matchers {
-   val newton = Profile("j2MGGBAAAAAJ")
+   val newton = Profile(Source.fromURL(getClass.getResource("/newton.html")))
 
    "Sir Isaac Newton's profile" should "have 'isaac newton' as name" in {
       newton.name should be ("isaac newton")
