@@ -107,7 +107,21 @@ class Profile private (val content: Document)
    /**
     * The number of citations, detailed by year.
     */
-   lazy val history: Map[Int, Int] = ???
+   lazy val history: Map[Int, Int] = {
+      import scala.collection.JavaConversions._
+      val years = content  .select("span.gsc_g_t")
+                           .iterator
+                           .toList
+                           .map(_.text.toInt)
+
+      val citations = content.select("span.gsc_g_al")
+                        .iterator
+                        .toList
+                        .map(_.text.toInt)
+
+      years.zip(citations).toMap
+   }
+
 
    /**
     * @return All the publications associated to the profile.

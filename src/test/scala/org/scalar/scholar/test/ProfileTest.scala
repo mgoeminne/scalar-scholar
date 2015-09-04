@@ -44,4 +44,16 @@ class ProfileTest extends FlatSpec with Matchers {
    it should "have a recent i10-index at most as high as its global i10-index" in {
       newton.recent_i10 should be <= newton.i10
    }
+
+   it should "present a correct history" in {
+      newton.history should equal (Map(2007 -> 639,
+                                       2008 -> 730,
+                                       2009 -> 697,
+                                       2010 -> 674,
+                                       2011 -> 761,
+                                       2012 -> 808,
+                                       2013 -> 919,
+                                       2014 -> 864,
+                                       2015 -> 522))
+   }
 }
