@@ -1,6 +1,7 @@
 package org.scalar.scholar
 
 import java.io.File
+import java.net.URL
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -33,7 +34,11 @@ class Profile private (val content: Document)
     */
    lazy val name: String = content.select("div#gsc_prf_in").first().text
 
+   /**
+    * The profile id.
+    */
    lazy val id: String = ("""user=([^&]*)""".r.findFirstMatchIn(content.html)).get.group(1)
+
 
    /**
     * The h index associated to the profile.
@@ -151,7 +156,7 @@ class Profile private (val content: Document)
    {
       import scala.collection.JavaConversions._
 
-      val current = content.select("tr.gsc_a_tr")
+      content.select("tr.gsc_a_tr")
          .iterator
          .toList
          .map(entry =>
@@ -172,9 +177,10 @@ class Profile private (val content: Document)
             case s: String => Some(s.toInt)
          }
 
-         SimplifiedPublication(title, authors, description, citations, year)
+         val url = new URL(Profile.url(id), entry.select("a.gsc_a_at").first.attr("href"))
+
+         SimplifiedPublication(title, authors, description, citations, year, url)
       })
-      current
    }
 }
 
@@ -188,7 +194,7 @@ object Profile
     * @param id the author's id
     * @return the Profile associated to the id
     */
-   def apply(id: String) = new Profile(Jsoup.connect("https://scholar.google.com/citations?hl=en&user=" + id + "&pagesize=" + Profile.EXPECTED_PUBLICATIONS).get)
+   def apply(id: String) = new Profile(Jsoup.connect(url(id).toString).get)
 
    /**
     * Creates a [[Profile]], based on a file containing the webpage associated to the author.
@@ -196,4 +202,6 @@ object Profile
     * @return the Profile associated to the id
     */
    def apply(resource: Source) = new Profile(Jsoup.parse(resource.getLines().mkString))
+
+   private def url(id: String) = new URL("https://scholar.google.com/citations?hl=en&user=" + id + "&pagesize=" + Profile.EXPECTED_PUBLICATIONS)
 }

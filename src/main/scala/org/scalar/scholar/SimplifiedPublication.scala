@@ -14,13 +14,14 @@ import java.net.URL
  *                      found by calling specialised methods.
  * @param citations     The number of times the publication has been cited.
  * @param year          The year at which the publication has been submitted, if available.
- *
+ * @param url           The url of the page containing a detailed view of the publication
  */
 case class SimplifiedPublication(  title: String,
                                    authors: Seq[String],
                                    description: String,
                                    citations: Int,
-                                   year: Option[Int])
+                                   year: Option[Int],
+                                   private val url: URL)
 {
-   def detailed: DetailedPublication = ???
+   val detailed: DetailedPublication = DetailedPublication(url)
 }

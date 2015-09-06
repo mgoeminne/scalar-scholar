@@ -9,6 +9,6 @@ object Test
    {
       val profile = Profile("j2MGGBAAAAAJ")
 
-      println(profile.publications.size)
+      profile.publications.head.detailed.metadata foreach println
    }
 }
