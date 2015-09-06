@@ -26,11 +26,14 @@ class Profile private (val content: Document)
    private val RECENT_I10_INDEX = 5
 
 
+
    /**
     *
     * The name of the author associated to the profile
     */
    lazy val name: String = content.select("div#gsc_prf_in").first().text
+
+   lazy val id: String = ("""user=([^&]*)""".r.findFirstMatchIn(content.html)).get.group(1)
 
    /**
     * The h index associated to the profile.
@@ -126,17 +129,66 @@ class Profile private (val content: Document)
    /**
     * @return All the publications associated to the profile.
     */
-   def publications(): Stream[Publication] = ???
+   def publications: Stream[SimplifiedPublication] = {
+      val pubs: List[SimplifiedPublication] = extractPublications(content)
+
+      if(pubs.size < Profile.EXPECTED_PUBLICATIONS) pubs.toStream
+      else pubs.toStream #::: nextPublications(Profile.EXPECTED_PUBLICATIONS, Profile.EXPECTED_PUBLICATIONS)
+   }
+
+   private def nextPublications(offset:Int, size: Int): Stream[SimplifiedPublication] =
+   {
+      val url = "https://scholar.google.com/citations?hl=en&user=" + id + "&cstart=" + offset + "&pagesize=" + Profile.EXPECTED_PUBLICATIONS
+      val pubcontent = Jsoup.connect(url).get
+
+      val pubs = extractPublications(pubcontent)
+
+      if(pubs.size < Profile.EXPECTED_PUBLICATIONS) pubs.toStream
+      else pubs.toStream #::: nextPublications(offset + Profile.EXPECTED_PUBLICATIONS, Profile.EXPECTED_PUBLICATIONS)
+   }
+
+   private def extractPublications(content: Document): List[SimplifiedPublication] =
+   {
+      import scala.collection.JavaConversions._
+
+      val current = content.select("tr.gsc_a_tr")
+         .iterator
+         .toList
+         .map(entry =>
+      {
+         val title = entry.select("a.gsc_a_at").first().text.toString
+         val info = entry.select("div.gs_gray").iterator.toList
+         val authors = info(0).text.split(",").map(_.trim)
+         val description = info(1).text
+         val citations = entry.select("a.gsc_a_ac").first.text.replaceAll("[^0-9]", "") match
+         {
+            case "" => 0
+            case s: String => s.toInt
+         }
+
+         val year = entry.select("span.gsc_a_h").first.text.trim match
+         {
+            case "" => None
+            case s: String => Some(s.toInt)
+         }
+
+         SimplifiedPublication(title, authors, description, citations, year)
+      })
+      current
+   }
 }
 
 object Profile
 {
+
+   protected val EXPECTED_PUBLICATIONS = 100
+
    /**
     * Creates a [[Profile]], based on an id representing the author.
     * @param id the author's id
     * @return the Profile associated to the id
     */
-   def apply(id: String) = new Profile(Jsoup.connect("https://scholar.google.com/citations?hl=en&user=" + id).get)
+   def apply(id: String) = new Profile(Jsoup.connect("https://scholar.google.com/citations?hl=en&user=" + id + "&pagesize=" + Profile.EXPECTED_PUBLICATIONS).get)
 
    /**
     * Creates a [[Profile]], based on a file containing the webpage associated to the author.

@@ -1,7 +1,6 @@
 package org.scalar.scholar.test
 
 import org.scalar.scholar.Profile
-import org.scalatest.Matchers._
 import org.scalatest._
 
 import scala.io.Source
@@ -21,15 +20,15 @@ class ProfileTest extends FlatSpec with Matchers {
       newton.email should be (None)
    }
 
-   it should "have at least 13025 citations" in {  // 2015-09-04
-      newton.citations should equal (13025)
+   it should "have 13025 citations" in {  // 2015-09-04
+      newton.citations should equal (13038)
    }
 
    it should "have at most as many recent citations than total citations" in {
-      newton.recent_citations should be <= newton.citations
+      newton.recent_citations should equal (4574)
    }
 
-   it should "have a h-index of at least 45" in { // 2015-09-04
+   it should "have a h-index of 45" in { // 2015-09-06
       newton.h should equal (45)
    }
 
@@ -37,23 +36,27 @@ class ProfileTest extends FlatSpec with Matchers {
       newton.recent_h should be <= newton.h
    }
 
-   it should "have a i-10 index of at least 99" in { // 2015-09-04
+   it should "have a i-10 index of 99" in { // 2015-09-06
       newton.i10 should equal (99)
    }
 
-   it should "have a recent i10-index at most as high as its global i10-index" in {
-      newton.recent_i10 should be <= newton.i10
+   it should "have a recent i10-index of 61" in {
+      newton.recent_i10 should be (61)
    }
 
    it should "present a correct history" in {
       newton.history should equal (Map(2007 -> 639,
-                                       2008 -> 730,
+                                       2008 -> 729,
                                        2009 -> 697,
                                        2010 -> 674,
-                                       2011 -> 761,
+                                       2011 -> 760,
                                        2012 -> 808,
                                        2013 -> 919,
-                                       2014 -> 864,
-                                       2015 -> 522))
+                                       2014 -> 865,
+                                       2015 -> 535))
+   }
+
+   it should "have 200 publications immediatly available from the main Profile webpage" in {
+      newton.publications.take(100).size should equal (100)
    }
 }

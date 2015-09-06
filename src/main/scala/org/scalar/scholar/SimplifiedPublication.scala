@@ -3,7 +3,8 @@ package org.scalar.scholar
 import java.net.URL
 
 /**
- * A research publication
+ * A simplified view of a publication. A more detailed view is available by looking in
+ * the Detailed view
  * @param title         The publication title, as it appears in the first page.
  * @param authors       An ordered sequence of authors involved in the publication.
  * @param description   A short textual description of the publication, that generally
@@ -15,17 +16,11 @@ import java.net.URL
  * @param year          The year at which the publication has been submitted, if available.
  *
  */
-case class Publication(title: String,
-                       authors: Seq[String],
-                       description: String,
-                       citations: Int,
-                       year: Option[Int])
+case class SimplifiedPublication(  title: String,
+                                   authors: Seq[String],
+                                   description: String,
+                                   citations: Int,
+                                   year: Option[Int])
 {
-   def pub_abstract(): Option[String] = ???
-   def date: Option[String] = ???
-
-   def history: Map[Int, Int] = ???
-   def gs_url: URL = ???
-   def preprint: Option[URL] = ???
-   def reference: Reference = ???
+   def detailed: DetailedPublication = ???
 }
