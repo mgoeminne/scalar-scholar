@@ -56,7 +56,7 @@ class ProfileTest extends FlatSpec with Matchers {
                                        2015 -> 535))
    }
 
-   it should "have 200 publications immediatly available from the main Profile webpage" in {
+   it should "have 100 publications immediatly available from the main Profile webpage" in {
       newton.publications.take(100).size should equal (100)
    }
 }

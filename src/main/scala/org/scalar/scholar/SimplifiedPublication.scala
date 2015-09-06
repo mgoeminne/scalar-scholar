@@ -23,5 +23,5 @@ case class SimplifiedPublication(  title: String,
                                    year: Option[Int],
                                    private val url: URL)
 {
-   val detailed: DetailedPublication = DetailedPublication(url)
+   lazy val detailed: DetailedPublication = DetailedPublication(url)
 }
